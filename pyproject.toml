@@ -2,7 +2,7 @@
 name = "docbr"
 version = "0.1.0"
 description = ""
-authors = ["Lucas Cristovam <lucas.henriques@totvs.com.br>"]
+authors = ["Lucas Cristovam <lucaschfonseca@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

@@ -9,15 +9,18 @@ class Document(ABC):
     Provides methods for sanitizing, masking, unmasking, and validating document strings.
     """
 
-    @property
-    @abstractmethod
-    def plain(self) -> str:
-        """Get the plain document string."""
+    _plain: str = ''
+    _masked: str = ''
 
     @property
-    @abstractmethod
+    def plain(self) -> str:
+        """Get the plain document string."""
+        return self._plain
+
+    @property
     def masked(self) -> str:
         """Get the masked document string."""
+        return self._masked
 
     @abstractmethod
     def sanitize(self, doc: str) -> str:
@@ -62,14 +65,42 @@ class Document(ABC):
         """
 
     @staticmethod
-    def _validate_input(
-        input_data: str | None, accepted_characters: Set[str] | None = None
-    ) -> None:
+    def _validate_input(input_data: str | None, mask_characters: Set[str] | None = None) -> None:
         """
         Validate the input data by checking for invalid characters.
 
         :param input_data: The input data to be validated.
-        :param accepted_characters: Optional set of accepted characters.
-                                    If None, the default set {'.'', '-', '/', ' '} will be used.
+        :param mask_characters: Optional set of accepted mask characters.
+               If None, the default set {'.'', '-', '/', ' '} will be used.
         :raises ValueError: If invalid character(s) are found in the input data.
         """
+        if input_data is None:
+            raise ValueError('Invalid input.')
+
+        mask_characters = mask_characters or {'.', '-', '/', ' '}
+        non_digits = set([c for c in input_data if not c.isdigit()])
+
+        if len(non_digits.difference(mask_characters)) > 0:
+            raise ValueError('Invalid character(s) found in the document string.')
+
+    @staticmethod
+    def _fill_with_zeros(doc: str, digits: int) -> str:
+        """Fill a document string with leading zeros if necessary.
+
+        :param doc: The document string.
+        :param digits: The number of digits in the desired document string.
+        :return: The document string with leading zeros.
+        """
+        if doc is None:
+            raise ValueError('Invalid input.')
+
+        return doc.zfill(digits)
+
+    def __init__(self, doc: str):
+        """Initialize a document object.
+
+        :param doc: The document string.
+        :raises ValueError: If the document string is invalid.
+        """
+        self._plain = self.sanitize(doc)
+        self._masked = self.mask(self._plain)
