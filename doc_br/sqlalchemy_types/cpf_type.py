@@ -6,7 +6,7 @@ from sqlalchemy.types import String, TypeDecorator
 from doc_br.types import CPF
 
 
-class CPFType(TypeDecorator):
+class CPFTypeDecorator(TypeDecorator):
     """
     Custom SQLAlchemy type for storing CPF documents.
 

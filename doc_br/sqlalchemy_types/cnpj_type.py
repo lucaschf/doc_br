@@ -6,7 +6,7 @@ from sqlalchemy.types import String, TypeDecorator
 from doc_br.types import CNPJ
 
 
-class CNPJType(TypeDecorator):
+class CNPJTypeDecorator(TypeDecorator):
     """
     Custom SQLAlchemy type for storing CNPJ documents.
 
