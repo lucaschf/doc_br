@@ -35,16 +35,6 @@ class CPF(Document):
     _PLAIN_DIGITS = 11
     """Number of digits in a CPF document string without mask."""
 
-    @property
-    def plain(self) -> str:
-        """Get the plain CPF document string."""
-        return self._plain
-
-    @property
-    def masked(self) -> str:
-        """Get the masked CPF document string."""
-        return self._masked
-
     def sanitize(self, doc: str) -> str:
         """
         Sanitize and standardize a CPF string by removing formatting and unwanted characters.
@@ -55,19 +45,14 @@ class CPF(Document):
         :return: The sanitized and standardized CPF document string.
         :raises ValueError: If the document string is invalid.
         """
-        self._validate_input(doc)
+        if doc is None:
+            raise ValueError('Invalid CPF document.')
+
+        self._validate_input(doc, mask_characters={'-', '.'})
         plain_doc = self.un_mask(doc, validate=False)
-        plain_doc = self._fill_with_zeros(plain_doc)
+        plain_doc = self._fill_with_zeros(plain_doc, self._PLAIN_DIGITS)
         self.validate(plain_doc)
         return plain_doc
-
-    def _fill_with_zeros(self, doc: str) -> str:
-        """Fill a CPF document string with leading zeros if necessary.
-
-        :param doc: The CPF document string.
-        :return: The CPF document string with leading zeros.
-        """
-        return doc.zfill(self._PLAIN_DIGITS)
 
     def validate(self, doc: str) -> None:
         """Validate a CPF document string.
@@ -75,8 +60,8 @@ class CPF(Document):
         :param doc: The CPF document string to be validated.
         :raises ValueError: If the document string is invalid.
         """
-        if not validate_docbr.CPF().validate(doc):
-            raise ValueError(doc)
+        if doc is None or not validate_docbr.CPF().validate(doc):
+            raise ValueError('Invalid CPF document.')
 
     def mask(self, doc: str) -> str:
         """Apply mask to a CPF document string.
@@ -85,8 +70,8 @@ class CPF(Document):
         :return: The masked CPF document string.
         :raises ValueError: If the document string is invalid.
         """
-        self.validate(doc)
-        return '{}.{}.{}-{}'.format(doc[:3], doc[3:6], doc[6:9], doc[9:])
+        plain_doc = self.sanitize(doc)
+        return '{}.{}.{}-{}'.format(plain_doc[:3], plain_doc[3:6], plain_doc[6:9], plain_doc[9:])
 
     def un_mask(self, doc: str, validate: bool) -> str:
         """Remove a mask from a CPF document string.
@@ -96,6 +81,9 @@ class CPF(Document):
         :return: The unmasked CPF document string.
         :raises ValueError: If the document string is invalid and validate is True.
         """
+        if doc is None:
+            raise ValueError('Invalid CPF document.')
+
         if validate:
             return self.sanitize(doc)
 
@@ -115,8 +103,7 @@ class CPF(Document):
         :param doc: The CPF document string.
         :raises ValueError: If the document string is invalid.
         """
-        self._plain = self.sanitize(doc)
-        self._masked = self.mask(self._plain)
+        super().__init__(doc)
 
     def __hash__(self) -> int:
         """Return the hash value of the CPF object.
