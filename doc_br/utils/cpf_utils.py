@@ -1,4 +1,4 @@
-from doc_br.cpf import CPF
+from doc_br.types import CPF
 from doc_br.utils.document_utils import DocumentUtils
 
 
@@ -16,7 +16,7 @@ class CPFDocumentUtils(DocumentUtils):
                     If False, return the plain CPF document.
         :return: The generated CPF document.
         """
-        return CPF.generate(mask=mask)
+        return CPF.generate()
 
     def sanitize(self, doc: str) -> str:
         """Sanitize a CPF document string.

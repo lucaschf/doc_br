@@ -1,6 +1,6 @@
 import validate_docbr
 
-from doc_br.doc import Document
+from doc_br.types.doc import Document
 
 
 class CPF(Document):
@@ -56,10 +56,10 @@ class CPF(Document):
         :raises ValueError: If the document string is invalid.
         """
         self._validate_input(doc)
-        doc = self.un_mask(doc, validate=False)
-        doc = self._fill_with_zeros(doc)
-        self.validate(doc)
-        return doc
+        plain_doc = self.un_mask(doc, validate=False)
+        plain_doc = self._fill_with_zeros(plain_doc)
+        self.validate(plain_doc)
+        return plain_doc
 
     def _fill_with_zeros(self, doc: str) -> str:
         """Fill a CPF document string with leading zeros if necessary.
@@ -102,14 +102,12 @@ class CPF(Document):
         return ''.join(filter(str.isdigit, doc))
 
     @staticmethod
-    def generate(mask: bool) -> 'CPF':
+    def generate() -> 'CPF':
         """Generate a random CPF document.
 
-        :param mask: If True, return a masked CPF document.
-                     If False, return a plain CPF document.
         :return: The generated CPF document.
         """
-        return CPF(validate_docbr.CPF().generate(mask))
+        return CPF(validate_docbr.CPF().generate())
 
     def __init__(self, doc: str):
         """Initialize a CPF object.

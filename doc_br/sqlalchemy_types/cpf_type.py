@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy.engine.interfaces import Dialect
 from sqlalchemy.types import String, TypeDecorator
 
-from doc_br.cpf import CPF
+from doc_br.types import CPF
 
 
 class CPFType(TypeDecorator):

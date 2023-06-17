@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Set
 
-from doc_br.doc import Document
+from doc_br.types.doc import Document
 
 
 class DocumentUtils(ABC):
@@ -53,25 +53,23 @@ class DocumentUtils(ABC):
         """
 
     @abstractmethod
-    def generate(self, mask: bool = False) -> Document:
+    def generate(self) -> Document:
         """
         Generate a new document.
 
-        :param mask: Whether to mask the generated document. Defaults to False.
         :return: The generated document.
         """
 
-    def generate_documents(self, n: int = 1, mask: bool = False) -> Set[Document]:
+    def generate_documents(self, n: int = 1) -> Set[Document]:
         """
         Generate a set of documents.
 
         :param n: The number of documents to generate. Default to 1.
-        :param mask: Whether to mask the generated document. Defaults to False.
         :return: A set of generated documents.
         """
         docs = set()
 
         while len(docs) < n:
-            docs.add(self.generate(mask))
+            docs.add(self.generate())
 
         return docs
