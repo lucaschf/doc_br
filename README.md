@@ -2,6 +2,8 @@
 
 Uma biblioteca para manipulação de documentos brasileiros.
 
+[![Coverage Status](https://coveralls.io/repos/github/lucaschf/doc_br/badge.svg)](https://coveralls.io/github/lucaschf/doc_br)
+
 ## Instalação
 
 Você pode instalar a biblioteca `doc_br` usando pip:
