@@ -22,16 +22,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          coverage run --source=mypkg -m pytest tests/
+          coverage run --source=nome_do_seu_pacote -m pytest tests/
           coveralls
-#
-#      - name: Convert coverage to lcov
-#        run: |
-#          coveragepy-lcov < coverage.xml > coverage.lcov
-#
-#      - name: Upload coverage to Coveralls
-#        uses: coverallsapp/github-action@master
-#        with:
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
-#          path-to-lcov: ./coverage.lcov
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
