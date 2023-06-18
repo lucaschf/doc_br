@@ -18,15 +18,15 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest coverage validate_docbr
+        pip install pytest coverage validate_docbr coveragepy-lcov
 
     - name: Run tests with coverage
       run: |
         coverage run -m pytest
-        coverage xml
+        coveragepy-lcov coverage.xml
 
     - name: Upload coverage to Coveralls
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./coverage.xml
+        path-to-lcov: ./coverage.lcov
