@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-cov coveragepy-lcov validate_docbr
+          pip install pytest pytest-cov coverage==5.5 coveragepy-lcov validate_docbr
 
       - name: Run tests with coverage
         run: |
