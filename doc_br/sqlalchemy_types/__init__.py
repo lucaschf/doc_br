@@ -1,2 +1,2 @@
-from .cnpj_type import CNPJType  # noqa: F401
-from .cpf_type import CPFType  # noqa: F401
+from .cnpj_type import CNPJTypeDecorator  # noqa: F401
+from .cpf_type import CPFTypeDecorator  # noqa: F401
