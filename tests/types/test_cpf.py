@@ -15,9 +15,9 @@ def valid_cpf_str():
 
 
 def test_cpf_creation(valid_cpf, valid_cpf_str):
-    plain = ''.join([c for c in valid_cpf_str if c.isdigit()])
+    plain = ''.join([c for c in valid_cpf.masked if c.isdigit()])
     assert valid_cpf.plain == plain
-    assert valid_cpf.masked == valid_cpf_str
+    assert valid_cpf.masked == validate_docbr.CPF().mask(plain)
 
 
 @pytest.mark.parametrize("invalid_cpf", ['11111111111', '', None, 'abcd.efgh.ijkl-mn'])
@@ -64,8 +64,9 @@ def test_un_mask(valid_cpf):
 
 
 def test_sanitize(valid_cpf, valid_cpf_str):
-    assert valid_cpf.sanitize(valid_cpf_str) == valid_cpf_str
-    assert valid_cpf.sanitize("529.982.247-25") == valid_cpf_str
+    plain = ''.join([c for c in valid_cpf_str if c.isdigit()])
+    assert valid_cpf.sanitize(valid_cpf_str) == plain
+    assert valid_cpf.sanitize("529.982.247-25") == '52998224725'
     assert valid_cpf.sanitize("337231923") == "00337231923"
 
     with pytest.raises(ValueError):

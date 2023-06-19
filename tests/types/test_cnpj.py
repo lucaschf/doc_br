@@ -5,7 +5,7 @@ from doc_br.types import CNPJ
 
 
 @pytest.fixture
-def valid_cnpj():
+def valid_cnpj() -> CNPJ:
     return CNPJ(validate_docbr.CNPJ().generate())
 
 
@@ -24,8 +24,8 @@ def test_sanitize_invalid_inputs(invalid_cnpj, valid_cnpj):
 
 
 def test_sanitize_valid_inputs(valid_cnpj, valid_cnpj_str):
-    plain = ''.join([c for c in valid_cnpj_str if c.isdigit()])
-    assert valid_cnpj.sanitize(valid_cnpj_str) == plain
+    plain = ''.join([c for c in valid_cnpj.masked if c.isdigit()])
+    assert valid_cnpj.sanitize(valid_cnpj.masked) == plain
 
 
 @pytest.mark.parametrize(
