@@ -1,95 +1,75 @@
 import pytest
+import validate_docbr
 
 from doc_br.types import CPF
 
 
-def test_cpf_creation():
-    # Test valid CPF creation
-    valid_cpf = "52998224725"  # valid CPF number
-    cpf = CPF(valid_cpf)
-    assert cpf.plain == valid_cpf
-
-    # Test masked CPF
-    assert cpf.masked == "529.982.247-25"
+@pytest.fixture
+def valid_cpf():
+    return CPF(validate_docbr.CPF().generate())
 
 
-def test_invalid_cpf_creation():
-    # Test invalid CPF creation
-    invalid_cpf = "11111111111"  # invalid CPF number
+@pytest.fixture
+def valid_cpf_str():
+    return validate_docbr.CPF().generate(mask=True)
+
+
+def test_cpf_creation(valid_cpf, valid_cpf_str):
+    plain = ''.join([c for c in valid_cpf_str if c.isdigit()])
+    assert valid_cpf.plain == plain
+    assert valid_cpf.masked == valid_cpf_str
+
+
+@pytest.mark.parametrize("invalid_cpf", ['11111111111', '', None, 'abcd.efgh.ijkl-mn'])
+def test_invalid_cpf_creation(invalid_cpf):
     with pytest.raises(ValueError):
         CPF(invalid_cpf)
 
-    with pytest.raises(ValueError):
-        CPF('None')
 
-
-def test_cpf_generation():
-    # Test CPF generation
-    cpf = CPF.generate()
-    assert len(cpf.plain) == 11  # A valid CPF should have 11 digits
+def test_cpf_generation(valid_cpf):
+    assert len(valid_cpf.plain) == 11
 
 
 def test_cpf_equality():
-    # Test CPF equality
-    cpf1 = CPF("52998224725")
-    cpf2 = CPF("52998224725")
-    assert cpf1 == cpf2
-
-    # Different CPFs should not be equal
+    cpf1 = CPF.generate()
+    cpf2 = CPF(cpf1.plain)
     cpf3 = CPF.generate()
+    assert cpf1 == cpf2
     assert cpf1 != cpf3
 
 
 def test_cpf_hash():
-    # Test CPF hash
-    cpf1 = CPF("52998224725")
-    cpf2 = CPF("52998224725")
-    assert hash(cpf1) == hash(cpf2)
-
-    # Different CPFs should not have the same hash
+    cpf1 = CPF.generate()
+    cpf2 = CPF(cpf1.plain)
     cpf3 = CPF.generate()
+    assert hash(cpf1) == hash(cpf2)
     assert hash(cpf1) != hash(cpf3)
 
 
-def test_cpf_repr():
-    # Test CPF repr
-    cpf = CPF("52998224725")
-    assert repr(cpf) == "52998224725"
+def test_cpf_repr(valid_cpf):
+    assert repr(valid_cpf) == valid_cpf.plain
 
 
-def test_un_mask():
-    cpf = CPF("52998224725")
-    assert cpf.un_mask(cpf.masked, validate=True) == "52998224725"
-
-    cpf = CPF("52998224725")
-    assert cpf.un_mask(cpf.masked, validate=False) == "52998224725"
+def test_un_mask(valid_cpf):
+    assert valid_cpf.un_mask(valid_cpf.masked, validate=True) == valid_cpf.plain
+    assert valid_cpf.un_mask(valid_cpf.masked, validate=False) == valid_cpf.plain
 
     with pytest.raises(ValueError):
-        cpf.un_mask('111111111', validate=True)
+        valid_cpf.un_mask('111111111', validate=True)
 
-    assert cpf.un_mask('111111111', validate=False) == '111111111'
+    assert valid_cpf.un_mask('111111111', validate=False) == '111111111'
 
     with pytest.raises(ValueError):
-        # noinspection PyTypeChecker
-        cpf.un_mask(None, validate=True)
+        valid_cpf.un_mask(None, validate=True)
 
 
-def test_sanitize():
-    # Test a plain, valid CPF
-    cpf = CPF("52998224725")
-    assert cpf.sanitize("52998224725") == "52998224725"
+def test_sanitize(valid_cpf, valid_cpf_str):
+    assert valid_cpf.sanitize(valid_cpf_str) == valid_cpf_str
+    assert valid_cpf.sanitize("529.982.247-25") == valid_cpf_str
+    assert valid_cpf.sanitize("337231923") == "00337231923"
 
-    # Test a masked, valid CPF
-    assert cpf.sanitize("529.982.247-25") == "52998224725"
-
-    # Test a CPF that needs to be filled with zeros
-    assert cpf.sanitize("337231923") == "00337231923"
-
-    # Test a CPF that's None
     with pytest.raises(ValueError):
-        # noinspection PyTypeChecker
-        cpf.sanitize(None)
+        valid_cpf.sanitize(None)
 
-    # Test an invalid CPF
     with pytest.raises(ValueError):
-        cpf.sanitize("11111111111")
+        valid_cpf.sanitize("11111111111")
