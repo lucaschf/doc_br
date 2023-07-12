@@ -8,5 +8,5 @@ setup(
     author_email='lucaschfonseca@gmail.com',
     description='Uma biblioteca para manipulação e validação de CPF e CNPJ',
     packages=find_packages(),
-    install_requires=['validate-docbr', 'SQLAlchemy'],
+    install_requires=['validate_docbr', 'SQLAlchemy'],
 )
