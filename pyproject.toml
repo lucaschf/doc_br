@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "docbr"
+name = "doc_br"
 version = "0.1.0"
 description = ""
 authors = ["Lucas Cristovam <lucaschfonseca@gmail.com>"]
