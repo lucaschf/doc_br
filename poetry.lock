@@ -54,10 +54,18 @@ category = "main"
 optional = false
 python-versions = ">=3.7"
 
+[[package]]
+name = "validate-docbr"
+version = "1.10.0"
+description = "Validate brazilian documents."
+category = "main"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "6f789416a39d9f879d671eaa932d9f193a10dd7f52d0001df60e6dead53a82cb"
+content-hash = "f07e86be39fb15121cd792107f1b18457568fede4fb3e944dc7bed2fc9c5893f"
 
 [metadata.files]
 greenlet = [
@@ -168,4 +176,7 @@ SQLAlchemy = [
 typing-extensions = [
     {file = "typing_extensions-4.6.3-py3-none-any.whl", hash = "sha256:88a4153d8505aabbb4e13aacb7c486c2b4a33ca3b3f807914a9b4c844c471c26"},
     {file = "typing_extensions-4.6.3.tar.gz", hash = "sha256:d91d5919357fe7f681a9f2b5b4cb2a5f1ef0a1e9f59c4d8ff0d3491e05c0ffd5"},
+]
+validate-docbr = [
+    {file = "validate_docbr-1.10.0-py3-none-any.whl", hash = "sha256:ff016f180b0c5ecff06abce1d83385924438c4d4c7f5c050e90fb724f1d968bb"},
 ]
