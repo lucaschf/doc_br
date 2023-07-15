@@ -49,7 +49,7 @@ class CPF(Document):
             raise ValueError('Invalid CPF document.')
 
         self._validate_input(doc, mask_characters={'-', '.'})
-        plain_doc = self.un_mask(doc, validate=False)
+        plain_doc = self.remove_mask(doc, validate_unmasked=False)
         plain_doc = self._fill_with_zeros(plain_doc, self._PLAIN_DIGITS)
         self.validate(plain_doc)
         return plain_doc
@@ -63,7 +63,7 @@ class CPF(Document):
         if doc is None or not validate_docbr.CPF().validate(doc):
             raise ValueError('Invalid CPF document.')
 
-    def mask(self, doc: str) -> str:
+    def apply_mask(self, doc: str) -> str:
         """Apply mask to a CPF document string.
 
         :param doc: The CPF document string to be masked.
@@ -73,21 +73,21 @@ class CPF(Document):
         plain_doc = self.sanitize(doc)
         return '{}.{}.{}-{}'.format(plain_doc[:3], plain_doc[3:6], plain_doc[6:9], plain_doc[9:])
 
-    def un_mask(self, doc: str, validate: bool) -> str:
+    def remove_mask(self, masked_document: str, validate_unmasked: bool) -> str:
         """Remove a mask from a CPF document string.
 
-        :param doc: The masked CPF document string.
-        :param validate: Whether to validate the unmasked CPF document string.
+        :param masked_document: The masked CPF document string.
+        :param validate_unmasked: Whether to validate the unmasked CPF document string.
         :return: The unmasked CPF document string.
-        :raises ValueError: If the document string is invalid and validate is True.
+        :raises ValueError: If the document string is invalid and validate_unmasked is True.
         """
-        if doc is None:
+        if masked_document is None:
             raise ValueError('Invalid CPF document.')
 
-        if validate:
-            return self.sanitize(doc)
+        if validate_unmasked:
+            return self.sanitize(masked_document)
 
-        return ''.join(filter(str.isdigit, doc))
+        return ''.join(filter(str.isdigit, masked_document))
 
     @staticmethod
     def generate() -> 'CPF':
@@ -104,25 +104,3 @@ class CPF(Document):
         :raises ValueError: If the document string is invalid.
         """
         super().__init__(doc)
-
-    def __hash__(self) -> int:
-        """Return the hash value of the CPF object.
-
-        :return: The hash value.
-        """
-        return hash(self._plain)
-
-    def __eq__(self, other: 'CPF') -> bool:
-        """Check if two CPF objects are equal.
-
-        :param other: The other CPF object to compare.
-        :return: True if the objects are equal, False otherwise.
-        """
-        return self._plain == other._plain
-
-    def __repr__(self) -> str:
-        """Return the string representation of the CPF object.
-
-        :return: The plain CPF document string.
-        """
-        return self.plain

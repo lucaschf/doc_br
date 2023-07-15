@@ -51,16 +51,16 @@ def test_cpf_repr(valid_cpf):
 
 
 def test_un_mask(valid_cpf):
-    assert valid_cpf.un_mask(valid_cpf.masked, validate=True) == valid_cpf.plain
-    assert valid_cpf.un_mask(valid_cpf.masked, validate=False) == valid_cpf.plain
+    assert valid_cpf.remove_mask(valid_cpf.masked, validate_unmasked=True) == valid_cpf.plain
+    assert valid_cpf.remove_mask(valid_cpf.masked, validate_unmasked=False) == valid_cpf.plain
 
     with pytest.raises(ValueError):
-        valid_cpf.un_mask('111111111', validate=True)
+        valid_cpf.remove_mask('111111111', validate_unmasked=True)
 
-    assert valid_cpf.un_mask('111111111', validate=False) == '111111111'
+    assert valid_cpf.remove_mask('111111111', validate_unmasked=False) == '111111111'
 
     with pytest.raises(ValueError):
-        valid_cpf.un_mask(None, validate=True)
+        valid_cpf.remove_mask(None, validate_unmasked=True)
 
 
 def test_sanitize(valid_cpf, valid_cpf_str):

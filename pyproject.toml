@@ -8,6 +8,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 SQLAlchemy = "^2.0.16"
+validate-docbr = "^1.10.0"
+pytest = "^7.4.0"
 
 
 [build-system]
