@@ -37,7 +37,7 @@ class Document(ABC):
         """
 
     @abstractmethod
-    def mask(self, doc: str) -> str:
+    def apply_mask(self, doc: str) -> str:
         """
         Apply a mask to the document string.
 
@@ -46,12 +46,12 @@ class Document(ABC):
         """
 
     @abstractmethod
-    def un_mask(self, doc: str, validate: bool) -> str:
+    def remove_mask(self, masked_document: str, validate_unmasked: bool) -> str:
         """
         Remove the mask from the document string.
 
-        :param doc: The masked document string.
-        :param validate: Whether to validate the unmasked document string.
+        :param masked_document: The masked document string.
+        :param validate_unmasked: Whether to validate the unmasked document string.
         :return: The unmasked document string.
         """
 
@@ -96,6 +96,28 @@ class Document(ABC):
 
         return doc.zfill(digits)
 
+    def __hash__(self) -> int:
+        """Return the hash value of the Document object.
+
+        :return: The hash value.
+        """
+        return hash(self._plain)
+
+    def __eq__(self, other: 'Document') -> bool:
+        """Check if two CPF objects are equal.
+
+        :param other: The other CPF object to compare.
+        :return: True if the objects are equal, False otherwise.
+        """
+        return self._plain == other._plain
+
+    def __repr__(self) -> str:
+        """Return the string representation of the object.
+
+        :return: The plain document string.
+        """
+        return self.plain
+
     def __init__(self, doc: str):
         """Initialize a document object.
 
@@ -103,4 +125,4 @@ class Document(ABC):
         :raises ValueError: If the document string is invalid.
         """
         self._plain = self.sanitize(doc)
-        self._masked = self.mask(self._plain)
+        self._masked = self.apply_mask(self._plain)

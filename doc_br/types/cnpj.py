@@ -49,7 +49,7 @@ class CNPJ(Document):
             raise ValueError('Invalid CNPJ document.')
 
         self._validate_input(doc, mask_characters={'.', '-', '/'})
-        plain_doc = self.un_mask(doc, validate=False)
+        plain_doc = self.remove_mask(doc, validate_unmasked=False)
         plain_doc = self._fill_with_zeros(plain_doc, self._PLAIN_DIGITS)
         self.validate(plain_doc)
         return plain_doc
@@ -63,7 +63,7 @@ class CNPJ(Document):
         if doc is None or not validate_docbr.CNPJ().validate(doc):
             raise ValueError('Invalid CNPJ document.')
 
-    def mask(self, doc: str) -> str:
+    def apply_mask(self, doc: str) -> str:
         """Apply mask to a CNPJ document string.
 
         :param doc: The CNPJ document string to be masked.
@@ -78,18 +78,18 @@ class CNPJ(Document):
             plain_doc[:2], plain_doc[2:5], plain_doc[5:8], plain_doc[8:12], plain_doc[12:]
         )
 
-    def un_mask(self, doc: str, validate: bool) -> str:
+    def remove_mask(self, masked_document: str, validate_unmasked: bool) -> str:
         """Remove a mask from a CNPJ document string.
 
-        :param doc: The masked CNPJ document string.
-        :param validate: Whether to validate the unmasked CNPJ document string.
+        :param masked_document: The masked CNPJ document string.
+        :param validate_unmasked: Whether to validate the unmasked CNPJ document string.
         :return: The unmasked CNPJ document string.
-        :raises ValueError: If the document string is invalid and validate is True.
+        :raises ValueError: If the document string is invalid and validate_unmasked is True.
         """
-        if validate:
-            return self.sanitize(doc)
+        if validate_unmasked:
+            return self.sanitize(masked_document)
 
-        return ''.join(filter(str.isdigit, doc))
+        return ''.join(filter(str.isdigit, masked_document))
 
     @staticmethod
     def generate() -> 'CNPJ':
@@ -106,25 +106,3 @@ class CNPJ(Document):
         :raises ValueError: If the document string is invalid.
         """
         super().__init__(doc)
-
-    def __hash__(self) -> int:
-        """Return the hash value of the CNPJ object.
-
-        :return: The hash value.
-        """
-        return hash(self._plain)
-
-    def __eq__(self, other: 'CNPJ') -> bool:
-        """Check if two CNPJ objects are equal.
-
-        :param other: The other CNPJ object to compare.
-        :return: True if the objects are equal, False otherwise.
-        """
-        return self._plain == other._plain
-
-    def __repr__(self) -> str:
-        """Return the string representation of the CNPJ object.
-
-        :return: The plain CNPJ document string.
-        """
-        return self.plain

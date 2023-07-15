@@ -39,7 +39,7 @@ class CPFDocumentUtils(DocumentUtils):
         """
         CPF(doc)
 
-    def mask(self, doc: str) -> str:
+    def apply_mask(self, doc: str) -> str:
         """Mask a CPF document string.
 
         :param doc: The CPF document to be masked.
@@ -48,7 +48,7 @@ class CPFDocumentUtils(DocumentUtils):
         """
         return CPF(doc).masked
 
-    def un_mask(self, doc: str) -> str:
+    def remove_mask(self, doc: str) -> str:
         """Unmask a CPF document string.
 
         :param doc: The CPF document to be unmasked.

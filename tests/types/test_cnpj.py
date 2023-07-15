@@ -27,6 +27,9 @@ def test_sanitize_valid_inputs(valid_cnpj, valid_cnpj_str):
     plain = ''.join([c for c in valid_cnpj.masked if c.isdigit()])
     assert valid_cnpj.sanitize(valid_cnpj.masked) == plain
 
+    plain2 = ''.join([c for c in valid_cnpj_str if c.isdigit()])
+    assert valid_cnpj.sanitize(valid_cnpj_str) == plain2
+
 
 @pytest.mark.parametrize(
     "invalid_cnpj",
@@ -42,17 +45,18 @@ def test_validate(invalid_cnpj, valid_cnpj):
 def test_mask(valid_cnpj, valid_cnpj_str):
     plain = ''.join([c for c in valid_cnpj_str if c.isdigit()])
 
-    assert valid_cnpj.mask(plain) == valid_cnpj_str
+    assert valid_cnpj.apply_mask(plain) == valid_cnpj_str
     with pytest.raises(ValueError):
-        valid_cnpj.mask(None)
+        # noinspection PyTypeChecker
+        valid_cnpj.apply_mask(None)
 
 
 def test_un_mask(valid_cnpj):
     plain = ''.join([c for c in valid_cnpj.masked if c.isdigit()])
-    assert valid_cnpj.un_mask(valid_cnpj.masked, False) == plain
+    assert valid_cnpj.remove_mask(valid_cnpj.masked, False) == plain
 
     with pytest.raises(ValueError):
-        valid_cnpj.un_mask('12.345.678/9012-34', True)
+        valid_cnpj.remove_mask('12.345.678/9012-34', True)
 
 
 def test_generate(valid_cnpj):

@@ -39,7 +39,7 @@ class CNPJDocumentUtils(DocumentUtils):
         """
         CNPJ(doc)
 
-    def mask(self, doc: str) -> str:
+    def apply_mask(self, doc: str) -> str:
         """Mask a CNPJ document string.
 
         :param doc: The CNPJ document to be masked.
@@ -48,7 +48,7 @@ class CNPJDocumentUtils(DocumentUtils):
         """
         return CNPJ(doc).masked
 
-    def un_mask(self, doc: str) -> str:
+    def remove_mask(self, doc: str) -> str:
         """Unmask a CNPJ document string.
 
         :param doc: The CNPJ document to be unmasked.
