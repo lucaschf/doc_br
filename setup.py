@@ -6,7 +6,7 @@ setup(
     url='https://github.com/lucaschf/doc_br',
     author='Lucas Cristovam',
     author_email='lucaschfonseca@gmail.com',
-    description='Uma biblioteca para manipulação e validação de CPF e CNPJ',
+    description='A library for handling and validating Brazilian CPF and CNPJ documents',
     packages=find_packages(),
-    install_requires=['validate_doc_br', 'SQLAlchemy'],
+    install_requires=['validate-docbr', 'SQLAlchemy'],
 )
