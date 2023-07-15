@@ -24,7 +24,7 @@ class DocumentUtils(ABC):
         """
 
     @abstractmethod
-    def mask(self, doc: str) -> str:
+    def apply_mask(self, doc: str) -> str:
         """
         Mask the document string.
 
@@ -34,7 +34,7 @@ class DocumentUtils(ABC):
         """
 
     @abstractmethod
-    def un_mask(self, doc: str) -> str:
+    def remove_mask(self, doc: str) -> str:
         """
         Remove the mask from the document string.
 

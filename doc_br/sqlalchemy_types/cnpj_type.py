@@ -38,5 +38,4 @@ class CNPJTypeDecorator(TypeDecorator):
         :return: The CNPJ object.
         """
         if value is not None:
-            print(type(value), value)  # add this line
             return CNPJ(value)
